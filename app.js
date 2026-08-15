@@ -1227,7 +1227,35 @@ app.post('/adminlogin', passport.authenticate('admin', {
 app.get('/adminusers', isAuthenticatedlocal, async (req, res) => {
   try {
     const users = await User.find({});
-    const posts = await Post.find({}).sort({ date: -1 });
+
+    const posts = await Post.aggregate([
+      {
+        $lookup: {
+          from: "blog",
+          localField: "email",
+          foreignField: "email",
+          as: "author"
+        }
+      },
+      {
+        $unwind: "$author"
+      },
+      {
+        $project: {
+          _id: 1,
+          email: 1,
+          title: 1,
+          posts: 1,
+          date: 1,
+          name: "$author.name"
+        }
+      },
+      {
+        $sort: {
+          date: -1
+        }
+      }
+    ]);
 
     res.render("admin_users.ejs", { users, posts });
 
