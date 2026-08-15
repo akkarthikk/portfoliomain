@@ -26,7 +26,7 @@
           <h4><%= post.title %></h4>
           <p><%= post.posts %></p>
           <small>By: <i><%= post.name %></i></small>
-          <small><%= new Date(post.date).toLocaleString("en-IN", {
+          <small>Last updated: <%= new Date(post.date).toLocaleString("en-IN", {
   timeZone: "Asia/Kolkata",
   day: "2-digit",
   month: "short",
