@@ -1324,13 +1324,13 @@ app.post(
 //     res.redirect("/blog-login");
 //   }
 // });
-// app.get("/new", (req, res) => {
-//   if (req.isAuthenticated()) {
-//     res.render("modify.ejs", { heading: "New Post", submit: "Create Post", user: req.user, });
-//   } else {
-//     res.redirect("/blog-login");
-//   }
-// });
+app.get("/new", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.render("modify.ejs", { heading: "New Post", submit: "Create Post", user: req.user, });
+  } else {
+    res.redirect("/blog-login");
+  }
+});
 app.get("/blog", async (req, res) => {
   if (req.isAuthenticated()) {
     try {
