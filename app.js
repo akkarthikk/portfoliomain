@@ -1494,6 +1494,15 @@ app.get("/posts/delete/:id", ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: "Error updating post" });
   }
 });
+app.get("/admin/deletepost/:id", isAuthenticatedlocal, async (req, res) => {
+  try {
+    await Post.deleteOne({ _id: req.params.id });
+    res.redirect("/adminusers");
+  } catch (err) {
+    console.error("Error deleting post:", err);
+    res.status(500).send("Error deleting post");
+  }
+});
 
 
 app.get("/logout", (req, res) => {
