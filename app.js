@@ -1557,7 +1557,8 @@ function isAuthenticatedlocal(req, res, next) {
 ///////////////weather///////////////////
 const datew = new Date();
 const dateString = datew.toString();
-const date = dateString.substring(0, 10);
+// const date = dateString.substring(0, 10);
+const date = moment().tz("Asia/Kolkata").format("ddd MMM DD");
 console.log(date);
 const key = process.env.KEY;
 app.get("/weather", async (req, res) => {
