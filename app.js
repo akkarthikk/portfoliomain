@@ -1211,14 +1211,26 @@ app.post('/adminlogin', passport.authenticate('admin', {
   failureFlash: true
 }));
 
+// app.get('/adminusers', isAuthenticatedlocal, async (req, res) => {
+//   try {
+//     const users = await User.find({});
+//     if (users.length > 0) {
+//       res.render("admin_users.ejs", { users });
+//     } else {
+//       res.json({ message: "No users found" });
+//     }
+//   } catch (err) {
+//     console.error("Error executing query:", err);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 app.get('/adminusers', isAuthenticatedlocal, async (req, res) => {
   try {
     const users = await User.find({});
-    if (users.length > 0) {
-      res.render("admin_users.ejs", { users });
-    } else {
-      res.json({ message: "No users found" });
-    }
+    const posts = await Post.find({}).sort({ date: -1 });
+
+    res.render("admin_users.ejs", { users, posts });
+
   } catch (err) {
     console.error("Error executing query:", err);
     res.status(500).json({ error: "Internal server error" });
