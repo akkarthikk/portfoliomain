@@ -26,7 +26,15 @@
           <h4><%= post.title %></h4>
           <p><%= post.posts %></p>
           <small>By: <i><%= post.name %></i></small>
-          <small><%= post.date %></small>
+          <small><%= new Date(post.date).toLocaleString("en-IN", {
+  timeZone: "Asia/Kolkata",
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: true
+}) %></small>
           <% if (post.name === user.name) { %>
             <a class="btn btn-warning rounded-pill px-3" type="button" href="/edit/<%= post.id %>">Edit</a>&nbsp;
             <a class="btn btn-danger rounded-pill px-3" type="button" href="/posts/delete/<%= post.id %>">Delete</a>
