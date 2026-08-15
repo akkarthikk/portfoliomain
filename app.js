@@ -1288,14 +1288,56 @@ app.post(
   })
 );
 
+// app.get("/blog", async (req, res) => {
+//   if (req.isAuthenticated()) {
+//     try {
+//       // Mongo equivalent of: SELECT * FROM blog JOIN posts ON blog.email = posts.email
+//       const posts = await Post.aggregate([
+//         {
+//           $lookup: {
+//             from: "blog", // collection name backing the User model
+//             localField: "email",
+//             foreignField: "email",
+//             as: "author",
+//           },
+//         },
+//         { $unwind: "$author" },
+//         {
+//           $project: {
+//             _id: 1,
+//             id: "$_id",
+//             email: 1,
+//             title: 1,
+//             posts: 1,
+//             date: 1,
+//             name: "$author.name",
+//           },
+//         },
+//         { $sort: { date: -1 } },
+//       ]);
+//       res.render("blog.ejs", { posts, user: req.user });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ message: "Error fetching posts" });
+//     }
+//   } else {
+//     res.redirect("/blog-login");
+//   }
+// });
+// app.get("/new", (req, res) => {
+//   if (req.isAuthenticated()) {
+//     res.render("modify.ejs", { heading: "New Post", submit: "Create Post", user: req.user, });
+//   } else {
+//     res.redirect("/blog-login");
+//   }
+// });
 app.get("/blog", async (req, res) => {
   if (req.isAuthenticated()) {
     try {
-      // Mongo equivalent of: SELECT * FROM blog JOIN posts ON blog.email = posts.email
       const posts = await Post.aggregate([
         {
           $lookup: {
-            from: "blog", // collection name backing the User model
+            from: "blog",
             localField: "email",
             foreignField: "email",
             as: "author",
@@ -1313,20 +1355,27 @@ app.get("/blog", async (req, res) => {
             name: "$author.name",
           },
         },
-        { $sort: { date: -1 } },
+        {
+          $addFields: {
+            pinned: {
+              $eq: ["$email", "ambaragondakarthik@gmail.com"]
+            }
+          }
+        },
+        {
+          $sort: {
+            pinned: -1,
+            date: -1
+          }
+        },
       ]);
+
       res.render("blog.ejs", { posts, user: req.user });
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Error fetching posts" });
     }
-  } else {
-    res.redirect("/blog-login");
-  }
-});
-app.get("/new", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.render("modify.ejs", { heading: "New Post", submit: "Create Post", user: req.user, });
   } else {
     res.redirect("/blog-login");
   }
